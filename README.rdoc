@@ -1,16 +1,78 @@
 = testdependencies
 
-Description goes here.
+This tiny tool adds explicit dependency declarations to 
+rails' #test method. more info: http://www.iam.unibe.ch/~scg/Research/JExample/
 
-== Note on Patches/Pull Requests
- 
-* Fork the project.
-* Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
-  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
-* Send me a pull request. Bonus points for topic branches.
+    test "A test that depends on" => "dependency" do |value_of_dependency|
+      assert something
+    end
+
+The dependency will be evaluated after the (now optional!) setup block has been run
+and before the test itself is executed.
+
+This style of testing hurts some holy principles and 
+might seem a bit dirty, but it will spped up your test 
+writing quite a bit.
+
+You don't have to declare any dependencies 
+
+== Installation
+
+$ gem install testdependencies
+
+Add the following line to your test_helper
+
+    #rails_root/test/test_helper.rb
+    
+    # loading rails first... 
+    require 'testdependencies' 
+    
+
+== Usage
+
+Instead of a string you can pass a single keyed (atomic) hash to #test
+with a string key that will define your new test just 
+as you would with the plain test method.
+
+The value of the hash defines a dependency.
+Either a sym = method_name or a string = test_name.
+
+
+== Example
+
+      class RegressionTest < ActiveSupport::TestCase
+
+        def new_user
+          user = Object.new
+          def user.name
+            "Horst"
+          end
+          user
+        end
+
+        test "User has a name" => :new_user do |user|
+          assert_respond_to user, :name
+          user.name
+        end
+
+        test "User name is Horst" => "User has a name" do |name|
+          assert_equal "Horst", name
+        end
+      end
+      
+== WARNING
+
+If you are the kind of person who will state that 
+
+"Something containing unescaped ampersand is not xml and
+thus there is no problem with *this* lib." 
+
+in reply to
+
+"Help me parsing an xml file that contains unescaped 
+ampersands with *this* lib"
+
+then you should probably NOT USE THIS TOOL.
 
 == Copyright
 

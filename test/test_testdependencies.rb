@@ -1,7 +1,21 @@
 require 'helper'
 
-class TestTestdependencies < Test::Unit::TestCase
-  should "probably rename this file and start testing for real" do
-    flunk "hey buddy, you should probably rename this file and start testing for real"
+class RegressionTest < ActiveSupport::TestCase
+  
+  def new_user
+    user = Object.new
+    def user.name
+      "Horst"
+    end
+    user
+  end
+  
+  test "User has a name" => :new_user do |user|
+    assert_respond_to user, :name
+    user.name
+  end
+  
+  test "User name is Horst" => "User has a name" do |name|
+    assert_equal "Horst", name
   end
 end
