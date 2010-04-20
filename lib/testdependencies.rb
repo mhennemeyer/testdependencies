@@ -7,9 +7,8 @@ end
 
 if defined?(Shoulda::Helpers) && Test::Unit::TestCase.ancestors.include?(Shoulda::Helpers)
   require "adapters/shoulda" 
-else
-  require "adapters/plain"
 end
+require "adapters/plain"
 
 
   
