@@ -1,7 +1,8 @@
 = testdependencies
 
-This tiny tool adds explicit dependency declarations to 
-rails' #test method. more info: http://www.iam.unibe.ch/~scg/Research/JExample/
+Testdependencies adds explicit dependency declarations to 
+Rails #test method and Shouldas' toplevel #should method (Not working inside contexts).
+more about dependency declarative testing: http://www.iam.unibe.ch/~scg/Research/JExample/
 
     test "A test that depends on" => "dependency" do |value_of_dependency|
       assert something
