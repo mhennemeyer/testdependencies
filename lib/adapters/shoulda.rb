@@ -2,7 +2,8 @@ ActiveSupport::TestCase.module_eval do
   class<<self
     alias old_should should
     def should(decl, &block)
-      unless String === decl
+      name = decl
+      if Hash === decl
         old_should decl.keys.first do
           dep = decl.values.first
           dep = "test: #{self.class.to_s.gsub('Test', '')} should #{dep}. ".to_sym if String === dep
@@ -13,6 +14,7 @@ ActiveSupport::TestCase.module_eval do
       else
         old_should decl, &block
       end
+      name
     end
   end
 end
